@@ -34,6 +34,7 @@ from social_auth.exceptions import StopPipeline, AuthException, AuthFailed, \
                                    AuthStateMissing, AuthStateForbidden, \
                                    NotAllowedToDisconnect
 from social_auth.backends.utils import build_consumer_oauth_request
+import pdb
 
 
 # OpenID configuration
@@ -770,6 +771,30 @@ class BaseOAuth2(BaseOAuth):
             query_string = ''
         return self.AUTHORIZATION_URL + '?' + urlencode(params) + query_string
 
+    def auth_url2(self):
+        """Return redirect url"""
+        client_id, client_secret = self.get_key_and_secret()
+        state = self.state_token()
+        # Store state in session for further request validation. The state
+        # value is passed as state parameter (as specified in OAuth2 spec), but
+        # also added to redirect_uri, that way we can still verify the request
+        # if the provider doesn't implement the state parameter.
+        self.request.session[self.AUTH_BACKEND.name + '_state'] = state
+        args = {
+            'client_id': client_id,
+            'state': state,
+            'redirect_uri': self.get_redirect_uri(state)
+        }
+        scope = self.get_scope()
+        if scope:
+            args['scope'] = self.SCOPE_SEPARATOR.join(self.get_scope())
+        if self.RESPONSE_TYPE:
+            args['response_type'] = self.RESPONSE_TYPE
+
+        args.update(self.auth_extra_arguments())
+
+        return self.AUTHORIZATION_URL + '?' + urlencode(args)
+
     def validate_state(self):
         """Validate state value. Raises exception on error, returns state
         value if valid."""
@@ -827,6 +852,27 @@ class BaseOAuth2(BaseOAuth):
         return self.do_auth(response['access_token'], response=response,
                             *args, **kwargs)
 
+    def auth_complete2(self, *args, **kwargs):
+        """Completes loging process, must return user instance"""
+        self.process_error(self.data)
+        params = self.auth_complete_params(self.validate_state())
+        request = Request(self.ACCESS_TOKEN_URL, data=urlencode(params),
+                          headers=self.auth_complete_headers())
+
+        try:
+            response = simplejson.loads(dsa_urlopen(request).read())
+        except HTTPError, e:
+            if e.code == 400:
+                raise AuthCanceled(self)
+            else:
+                raise
+        except (ValueError, KeyError):
+            raise AuthUnknownError(self)
+
+        self.process_error(response)
+        return response['access_token']
+
+
     def do_auth(self, access_token, *args, **kwargs):
         """Finish the auth process once the access_token was retrieved"""
         data = self.user_data(access_token, *args, **kwargs)
@@ -876,7 +922,6 @@ def get_backends(force_load=False):
             mod, cls_name = auth_backend.rsplit('.', 1)
             module = import_module(mod)
             backend = getattr(module, cls_name)
-
             if issubclass(backend, SocialAuthBackend):
                 name = backend.name
                 backends = getattr(module, 'BACKENDS', {})
