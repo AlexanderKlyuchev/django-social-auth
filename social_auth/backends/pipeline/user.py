@@ -58,14 +58,14 @@ def update_user_details(backend, details, response, user=None, is_new=False,
         return
 
     changed = False  # flag to track changes
-
-    for name, value in details.iteritems():
-        # do not update username, it was already generated
-        # do not update configured fields if user already existed
-        if name in (USERNAME, 'id', 'pk') or (not is_new and
+    if is_new
+        for name, value in details.iteritems():
+          # do not update username, it was already generated
+          # do not update configured fields if user already existed
+          if name in (USERNAME, 'id', 'pk') or (not is_new and
             name in setting('SOCIAL_AUTH_PROTECTED_USER_FIELDS', [])):
             continue
-        if value and value != getattr(user, name, None):
+          if value and value != getattr(user, name, None):
             setattr(user, name, value)
             changed = True
 
