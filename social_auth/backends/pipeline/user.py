@@ -58,7 +58,7 @@ def update_user_details(backend, details, response, user=None, is_new=False,
         return
 
     changed = False  # flag to track changes
-    if is_new
+    if is_new:
         for name, value in details.iteritems():
           # do not update username, it was already generated
           # do not update configured fields if user already existed
