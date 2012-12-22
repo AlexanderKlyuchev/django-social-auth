@@ -39,7 +39,7 @@ class UserSocialAuth(models.Model, UserSocialAuthMixin):
     aboutme=models.CharField(max_length=1000,blank=True)
     num_of_looks=models.IntegerField(default=0)
     received_votes=models.IntegerField(default=0)
-    num_advices=JSONField(default='{"num_advices_datting":0,"num_advices_work":0,"num_advices_interview":0,"num_advices_learning":0}')
+    num_advices=JSONField(default='{"num_advices_datting":0,"num_advices_work":0,"num_advices_interview":0,"num_advices_learning":0,"num_advices_night":0,"num_advices_wedding":0,"num_advices_corporate":0,"num_advices_walking":0,"num_advices_thing":0,"num_advices_other":0}')
     count_advices=models.IntegerField(default=0)
     num_stilists=models.IntegerField(default=0)
     num_i_style=models.IntegerField(default=0)
@@ -49,10 +49,10 @@ class UserSocialAuth(models.Model, UserSocialAuthMixin):
     notifications=JSONField(default='{"my_looks_update":1,"style_req":1,"advice":1,"news":1,"push_notify":1}')
     latest_visit=models.DateTimeField(auto_now_add = True)
     num_positive_votes=models.IntegerField(default=0)
-    city=models.CharField(max_length=1000,blank=True)
-    country=models.CharField(max_length=1000,blank=True)
-    bdate=models.IntegerField(blank=True)
-    gender=models.IntegerField(blank=True)
+    city=models.CharField(null=True,blank=True,max_length=1000)
+    country=models.CharField(null=True,blank=True,max_length=1000)
+    bdate=models.IntegerField(null=True,blank=True)
+    gender=models.IntegerField(null=True,blank=True)
 
     class Meta:
         """Meta data"""

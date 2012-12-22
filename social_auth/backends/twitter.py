@@ -15,6 +15,7 @@ from django.utils import simplejson
 
 from social_auth.backends import ConsumerBasedOAuth, OAuthBackend, USERNAME
 from social_auth.exceptions import AuthCanceled
+import pdb
 
 
 # Twitter configuration
@@ -74,6 +75,7 @@ class TwitterAuth(ConsumerBasedOAuth):
         """Return user data provided"""
         request = self.oauth_request(access_token, TWITTER_CHECK_AUTH)
         json = self.fetch_response(request)
+        #pdb.set_trace()
         try:
             return simplejson.loads(json)
         except ValueError:

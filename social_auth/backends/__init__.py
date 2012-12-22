@@ -226,12 +226,15 @@ class OAuthBackend(SocialAuthBackend):
             elif len(entry) == 1:
                 name = alias = entry
             else:  # ???
-                continue
+                name = alias = entry
+                discard=False
+                #continue
 
             value = response.get(name)
             if discard and not value:
                 continue
             data[alias] = value
+        #pdb.set_trace()
         return data
 
 

@@ -29,7 +29,7 @@ from social_auth.utils import sanitize_log_data, backend_setting, setting,\
     log, dsa_urlopen
 from social_auth.exceptions import AuthException, AuthCanceled, AuthFailed,\
     AuthTokenError, AuthUnknownError
-
+import pdb
 
 # Facebook configuration
 FACEBOOK_ME = 'https://graph.facebook.com/me?'
@@ -87,6 +87,7 @@ class FacebookAuth(BaseOAuth2):
 
         try:
             data = simplejson.load(dsa_urlopen(url))
+            #pdb.set_trace()
         except ValueError:
             extra = {'access_token': sanitize_log_data(access_token)}
             log('error', 'Could not load user data from Facebook.',

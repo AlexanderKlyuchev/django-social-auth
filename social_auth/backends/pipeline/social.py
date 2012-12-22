@@ -2,6 +2,7 @@ from django.utils.translation import ugettext
 
 from social_auth.models import UserSocialAuth, SOCIAL_AUTH_MODELS_MODULE
 from social_auth.exceptions import AuthAlreadyAssociated
+import pdb
 
 
 def social_auth_user(backend, uid, user=None, *args, **kwargs):
@@ -54,6 +55,7 @@ def load_extra_data(backend, details, response, uid, user, social_user=None,
                   UserSocialAuth.get_social_auth(backend.name, uid)
     if social_user:
         extra_data = backend.extra_data(user, uid, response, details)
+        #pdb.set_trace()
         if extra_data and social_user.extra_data != extra_data:
             if social_user.extra_data:
                 social_user.extra_data.update(extra_data)
