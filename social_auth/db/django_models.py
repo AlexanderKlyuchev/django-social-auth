@@ -39,7 +39,7 @@ class UserSocialAuth(models.Model, UserSocialAuthMixin):
     aboutme=models.CharField(max_length=1000,blank=True)
     num_of_looks=models.IntegerField(default=0)
     received_votes=models.IntegerField(default=0)
-    num_advices=JSONField(default='{"num_advices_datting":0,"num_advices_work":0,"num_advices_interview":0,"num_advices_learning":0,"num_advices_night":0,"num_advices_wedding":0,"num_advices_corporate":0,"num_advices_walking":0,"num_advices_thing":0,"num_advices_other":0}')
+    num_advices=JSONField(default='{"num_advices_datting":0,"num_advices_work":0,"num_advices_interview":0,"num_advices_learning":0,"num_advices_night":0,"num_advices_reception":0,"num_advices_wedding":0,"num_advices_corporate":0,"num_advices_walking":0,"num_advices_thing":0,"num_advices_other":0}')
     count_advices=models.IntegerField(default=0)
     num_stilists=models.IntegerField(default=0)
     num_i_style=models.IntegerField(default=0)
