@@ -6,6 +6,8 @@ from social_auth.db.base import UserSocialAuthMixin, AssociationMixin, \
                                 NonceMixin
 from social_auth.fields import JSONField
 from social_auth.utils import setting
+#import logging
+#from mysite.users import send_notifications
 
 
 # If User class is overridden, it *must* provide the following fields
@@ -53,6 +55,14 @@ class UserSocialAuth(models.Model, UserSocialAuthMixin):
     country=models.CharField(null=True,blank=True,max_length=1000)
     bdate=models.IntegerField(null=True,blank=True)
     gender=models.IntegerField(null=True,blank=True)
+    def save(self, *args, **kwargs):
+        if  self.received_votes !=0:
+            if self.num_positive_votes>=0:
+                self.civility=(self.num_positive_votes/self.received_votes)*100
+            else:
+                self.civility=0
+        #print "LOOK SAVE!!!"
+        super(UserSocialAuth, self).save(*args, **kwargs)
 
     class Meta:
         """Meta data"""
