@@ -58,7 +58,8 @@ class UserSocialAuth(models.Model, UserSocialAuthMixin):
     def save(self, *args, **kwargs):
         if  self.received_votes !=0:
             if self.num_positive_votes>=0:
-                self.civility=(self.num_positive_votes/self.received_votes)*100
+                civility=100*self.num_positive_votes/self.received_votes
+                self.civility=civility
             else:
                 self.civility=0
         #print "LOOK SAVE!!!"
